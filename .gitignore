@@ -1,0 +1,5 @@
+src/__pycache__/*
+.hypothesis/*
+*.env
+*_env.http
+
