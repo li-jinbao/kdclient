@@ -1,2 +1,2 @@
 # kdclient
-client library to use Kandbox Dispatch service
+THis is the client library to use [Kandbox Dispatch](https://www.kandbox.com) service.
