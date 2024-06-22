@@ -3,7 +3,7 @@ import os
 from datetime import datetime,timedelta
 
 from kplanner_api_adapter import KPlannerAPIAdapter
-from single_job_step_env import SingleStepEnv 
+from pickdrop_step_env import PickDropStepEnv 
 from util import set_team_flex_form, getWorkerJob, clear_team_data
 
 
@@ -29,24 +29,24 @@ team_config = {
     "horizon_start_datetime": "2024-02-14T08:01:01",
     "nbr_minutes_planning_windows_duration": 2880,
 
-    # "tile_server": "osm",
-    # "enabled_rule_codes": "basic;area_code", # ;tolerance_check;geo_merge;max_pick2drop_merge
+    "tile_server": "osm",
+    "enabled_rule_codes": "basic;area_code;geo_merge;max_pick2drop_merge", # ;tolerance_check
 
 }
 
 
 if __name__ == "__main__" :
-    CENTER_LONGLAT = (-0.193837707221846,51.491610151732466)
+    CENTER_LONGLAT = (103.83565315671713, 1.302803686066583, )
     config= { 
-        "simulation_log_dir": "{}/src/data/data1".format(current_dir) , 
+        "simulation_log_dir": "{}/src/data/sg_pickdrop".format(current_dir) , 
         "geo_longitude" : CENTER_LONGLAT[0],
         "geo_latitude" : CENTER_LONGLAT[1],   
         "CENTER_LONGLAT": CENTER_LONGLAT,
-        "planner_service_code": "single_area_code_cvrp",
+        "planner_service_code": "pickdrop",
         "team_config":team_config
     }
 
-    env = SingleStepEnv(config, api_adapter = api_adapter) 
+    env = PickDropStepEnv(config, api_adapter = api_adapter) 
     env.api_adapter.switch_team_by_code(team_code, config = config)
 
     clear_team_data(env=env) 
@@ -65,25 +65,19 @@ if __name__ == "__main__" :
             env.api_adapter.env_start_datetime + timedelta(minutes=600),
             "%Y-%m-%dT%H:%M:%S")
 
-
-    res1 = env.api_adapter.get_planner_worker_job_dataset()
     env.api_adapter.set_horizon_start_minutes(
                     team_id=env.api_adapter.team_id,
                     start_datetime=round_1_dt
                 )
     for stepi in range(nbr_initial_steps):
-        job_dict = env._move_to_next_unplanned_job(mutate_state = False)
+        job_dict = env._move_to_next_unplanned_job()
         if not job_dict:
                 print(f"Finished {order_count} steps!")
                 break
         
         order_count += 1
-        resa = env.create_job_from_log(logged_job=job_dict, auto_planning=False, add_noise=False)
+        resa = env.create_job_from_log(logged_job=job_dict, auto_planning=True)
 
-    env.api_adapter.run_batch_optimizer(param = {
-            "team_code": env.api_adapter.team_code,
-            "area_codes":"A"
-        })
     worker_dic = getWorkerJob(env=env, status_list = ["I", "F"])
     print("totally {} jobs planned".format(sum([len(lst) for lst in worker_dic.values ()])))
 

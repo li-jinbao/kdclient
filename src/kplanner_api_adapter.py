@@ -74,7 +74,7 @@ class KPlannerAPIAdapter:
                 "name":team_code,
                 "geo_longitude" : config["geo_longitude"],
                 "geo_latitude" :  config["geo_latitude"],
-                "planner_service":{"code":"single_area_code_cvrp"},
+                "planner_service":{"code":config["planner_service_code"]},
                 "flex_form_data": config["team_config"] ,
             }) 
             t = self.get_team_by_code(team_code)

@@ -1,9 +1,6 @@
 
-from threading import Lock
-import threading
 
 
-from kplanner_api_adapter import KPlannerAPIAdapter
 
 
 import random
@@ -19,101 +16,14 @@ log = logging.getLogger("single_step_env")
 import random
 
 
-lock = Lock()
 order_seconds = []
 TOLERANCE_MINUTES = 1200
 REALTIME_START_HORIZON_MINUTES = 10 * 60  #  129000 / 60#  + 100 - (9 * 60)
-
-SAMPLE_JOB_TEMPLATE = {
-    "code": "01",
-    "requested_primary_worker_code": None,
-    "location_code": None,
-    "geo_longitude": None,
-    "geo_latitude": None,
-    "job_type": "visit",
-    "planning_status": "U",
-    "auto_planning": True,
-    "is_active": True,
-    "name": None,
-    "description": None,
-    "flex_form_data": {},
-    "requested_start_datetime": None,
-    "requested_duration_minutes": 0.5,
-    # "requested_primary_worker_code": None,
-    "scheduled_start_datetime": None,
-    "scheduled_duration_minutes": 0.5,
-    "scheduled_primary_worker_code": None,
-    "requested_items": None,
-    # "auto_planning":True,
-}
+from util import StepEnv, SAMPLE_JOB_TEMPLATE, SAMPLE_ORDER_TEMPLATE, lock
 
 
-class SingleStepEnv:
+class SingleStepEnv(StepEnv):
     SKIP_SECONDS = 240 * 60
-    def __init__(self, config={}, api_adapter:KPlannerAPIAdapter=None):
-        # 
-        self.step_tick_minutes = 1
-        self.horizon_start_minutes = 0
-        self.step_tick_minutes = 1
-        self.reposition_before_job_count = 0
-        self.is_reposition = False
-        self.current_step = 0
-        self.job_overdue_dict = {}
-        self.job_log_iloc = 0
-        self.worker_log_iloc = 0
-        self.current_job_code = None
-        self.worker_at_location_i = 200_000
-        self.till_minutes = 0
-        self.workers_dict = {}
-        self.jobs_dict = {}
-        self.failed_jobs_dict = {}
-        self.order_seconds = []
-        if api_adapter is not None:
-            self.api_adapter = api_adapter
-        else:
-            self.api_adapter = KPlannerAPIAdapter(
-                service_url=config["service_url"],
-                username=config["username"],
-                password=config["password"],
-                team_code=config["team_code"],
-            )
-        self.config = config
-        self.org_id = self.api_adapter.org_id 
-
-        self.load_worker_job_logs()
-
-        self.CENTER_LONGLAT=config["CENTER_LONGLAT"]
-        self.DIFF_LONG = self.CENTER_LONGLAT[0] 
-        self.DIFF_LAT = self.CENTER_LONGLAT[1] 
-
-
-            
-    def track_jobs(self, result):
-        for job in result["scheduled_slots"]:  # [0]["assigned_jobs"]
-            if job["code"] in self.jobs_dict:
-                if (
-                    job["scheduled_start_datetime"]
-                    != self.jobs_dict[job["code"]]["scheduled_start_datetime"]
-                ):
-                    print(
-                        "job {} is rescheduled to worker: {}, time: {}".format(
-                            job["code"],
-                            result["worker_code"],
-                            job["scheduled_start_datetime"],
-                        )
-                    )
-            else:
-                print(
-                    "job {} is initially scheduled to worker: {}, time: {}".format(
-                        job["code"],
-                        result["worker_code"],
-                        job["scheduled_start_datetime"],
-                    )
-                )
-            job["scheduled_worker_code"] = result["worker_code"]
-            with lock:
-                self.jobs_dict[job["code"]] = job
-        
 
 
     def load_worker_job_logs(self):

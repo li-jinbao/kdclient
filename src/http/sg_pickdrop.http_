@@ -1,0 +1,235 @@
+@server_url=http://_server_url_/kd/api/v1
+@email=_email_@email.com
+@password=_password_
+@team_code=_team_code_
+
+###
+# @name login
+POST {{server_url}}/auth/login
+Content-Type: application/json
+
+{"email": "{{email}}", "password": "{{password}}"}
+
+###
+@jwtoken = {{login.response.body.data.token}}
+
+
+
+###
+# @name create_team
+POST {{server_url}}/teams/
+Authorization: Bearer {{jwtoken}}
+Content-Type: application/json
+
+{
+    "code": "{{team_code}}", "name": "{{team_code}}", 
+    "geo_longitude": 103.835, 
+    "geo_latitude": 1.303, 
+    "planner_service": {"code": "pickdrop"}, 
+    "flex_form_data": {
+        "enabled_rule_codes": "basic;area_code;geo_merge;max_pick2drop_merge", 
+        "fixed_horizon_flag": "1", 
+        "env_start_datetime": "2024-02-14T00:00:00", 
+        "horizon_start_datetime": "2024-02-14T02:01:01", 
+        "nbr_minutes_planning_windows_duration": 2880
+    }
+}
+
+
+
+
+###
+# @name create_worker
+POST {{server_url}}/workers/   HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{
+    "code": "w0", 
+    "name": "w0",
+    "team": {"code": "{{team_code}}"}, 
+    "geo_longitude": 103.839, 
+    "geo_latitude": 1.301, 
+    "flex_form_data": {"area_code": "A"}, 
+    "business_hour": {
+        "monday": [{"open": "0005", "close": "2330", "id": "a0", "isOpen": true}], 
+        "tuesday": [{"open": "0005", "close": "2330", "id": "a1", "isOpen": true}], 
+        "wednesday": [{"open": "0005", "close": "2330", "id": "a2", "isOpen": true}], 
+        "thursday": [{"open": "0005", "close": "2330", "id": "a3", "isOpen": true}], 
+        "friday": [{"open": "0005", "close": "2330", "id": "a4", "isOpen": true}], 
+        "saturday": [{"open": "0005", "close": "2330", "id": "a5", "isOpen": true}], 
+        "sunday": [{"open": "0005", "close": "2330", "id": "a6", "isOpen": true}]
+        }, 
+    "auto_planning": true,
+    "is_active": true
+}
+
+
+
+
+###
+# @name reset_planning_window
+
+POST {{server_url}}/planner_service/reset_planning_window/   HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{"team_code":  "{{team_code}}"}
+
+
+
+###
+# 103.80397, 1.311137 --> 103.7646, 1.32349
+
+@order_code=sg1$1
+
+###
+# @name create_order_0
+
+POST {{server_url}}/orders/  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{
+    "code": "{{order_code}}", 
+    "flex_form_data": {"area_code": "A"},  
+    "order_type": "pickdrop", 
+    "auto_planning": true, 
+    "auto_commit": true, 
+    "team": {"code": "{{team_code}}"} ,
+    "job_list": [
+        {
+            "code": "{{order_code}}-p", 
+            "geo_longitude": 103.80397, "geo_latitude": 1.311137, 
+            "job_type": "visit", 
+            "planning_status": "U", 
+            "auto_planning": true, 
+            "flex_form_data": {"area_code": "A"}, 
+            "requested_start_datetime": "2024-02-14T02:03:00", 
+            "requested_duration_minutes": 0.5,
+            "order_code": "{{order_code}}", 
+            "team": {"code": "{{team_code}}"}  
+        }, 
+        {
+            "code": "{{order_code}}-d", 
+            "geo_longitude": 103.7646, "geo_latitude": 1.32349,
+            "job_type": "visit", 
+            "planning_status": "U", 
+            "auto_planning": true, 
+            "flex_form_data": {"area_code": "A"}, 
+            "requested_start_datetime": "2024-02-14T03:03:00", 
+            "requested_duration_minutes": 0.5,
+            "order_code": "{{order_code}}", 
+            "team": {"code": "{{team_code}}"}  
+        }
+    ]
+}
+        
+
+###
+# 103.8601, 1.30598 --> 103.88465, 1.313883
+
+@order_code2=ord2
+
+###
+# @name create_order_2
+
+POST {{server_url}}/orders/  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{
+    "code": "{{order_code2}}", 
+    "flex_form_data": {"area_code": "A"},  
+    "order_type": "pickdrop", 
+    "auto_planning": true, 
+    "auto_commit": true, 
+    "team": {"code": "{{team_code}}"} ,
+    "job_list": [
+        {
+            "code": "{{order_code2}}-p", 
+            "geo_longitude":103.8601, "geo_latitude": 1.30598, 
+            "job_type": "visit", 
+            "planning_status": "U", 
+            "auto_planning": true, 
+            "flex_form_data": {"area_code": "A"}, 
+            "requested_start_datetime": "2024-02-14T02:03:00", 
+            "requested_duration_minutes": 0.5,
+            "order_code": "{{order_code2}}", 
+            "team": {"code": "{{team_code}}"}  
+        }, 
+        {
+            "code": "{{order_code2}}-d", 
+            "geo_longitude": 103.88465, "geo_latitude": 1.313883,
+            "job_type": "visit", 
+            "planning_status": "U", 
+            "auto_planning": true, 
+            "flex_form_data": {"area_code": "A"}, 
+            "requested_start_datetime": "2024-02-14T03:03:00", 
+            "requested_duration_minutes": 0.5,
+            "order_code": "{{order_code2}}", 
+            "team": {"code": "{{team_code}}"}  
+        }
+    ]
+}
+        
+
+### 
+@order_code3=ord3
+
+###
+# @name create_order_3
+
+POST {{server_url}}/orders/  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{
+    "code": "{{order_code3}}", 
+    "flex_form_data": {"area_code": "A"},  
+    "order_type": "pickdrop", 
+    "auto_planning": true, 
+    "auto_commit": true, 
+    "team": {"code": "{{team_code}}"} ,
+    "job_list": [
+        {
+            "code": "{{order_code3}}-p", 
+            "geo_longitude":103.8636, "geo_latitude": 1.30593, 
+            "job_type": "visit", 
+            "planning_status": "U", 
+            "auto_planning": true, 
+            "flex_form_data": {"area_code": "A"}, 
+            "requested_start_datetime": "2024-02-14T02:03:00", 
+            "requested_duration_minutes": 0.5,
+            "order_code": "{{order_code3}}", 
+            "team": {"code": "{{team_code}}"}  
+        }, 
+        {
+            "code": "{{order_code3}}-d", 
+            "geo_longitude": 103.8845, "geo_latitude": 1.3197,
+            "job_type": "visit", 
+            "planning_status": "U", 
+            "auto_planning": true, 
+            "flex_form_data": {"area_code": "A"}, 
+            "requested_start_datetime": "2024-02-14T03:03:00", 
+            "requested_duration_minutes": 0.5,
+            "order_code": "{{order_code3}}", 
+            "team": {"code": "{{team_code}}"}  
+        }
+    ]
+}
+        
+            
+            
+
+###
+POST {{server_url}}/planner_service/get_env_jobs/  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{
+    "team_code": "{{team_code}}", 
+    "worker_codes": "w0",
+    "reset_start_datetime": false,
+    "active_only":false
+}

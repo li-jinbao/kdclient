@@ -27,5 +27,13 @@
             "program": "${workspaceFolder}/src/london_simple.py",
             "args": []
         },        
+        {
+            "name": "Run SG Pickdrop",
+            "type": "debugpy",
+            "request": "launch",
+            "envFile": "${workspaceFolder}/sg.env",
+            "program": "${workspaceFolder}/src/sg_pickdrop.py",
+            "args": []
+        },        
     ]
 }
