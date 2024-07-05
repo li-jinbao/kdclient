@@ -1,0 +1,2 @@
+env_start_datetime,horizon_start_datetime,data_start_day,team_geo_longitude,team_geo_latitude,nbr_minutes_planning_windows_duration
+2023-11-13T00:00:00,2023-11-13T09:01:01,2023-11-10,103.85,1.3,1440

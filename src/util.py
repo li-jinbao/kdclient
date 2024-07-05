@@ -291,3 +291,13 @@ class StepEnv:
                 }
                 self.api_adapter.update_worker_status(update_dict)
                 self.workers_dict[worker.worker_code] = update_dict
+
+day_seq2day_str = {
+    0: 'sunday',
+    1: 'monday',
+    2: 'tuesday',
+    3: 'wednesday',
+    4: 'thursday',
+    5: 'friday',
+    6: 'saturday',
+}

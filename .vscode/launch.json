@@ -35,5 +35,13 @@
             "program": "${workspaceFolder}/src/sg_pickdrop.py",
             "args": []
         },        
+        {
+            "name": "Run sg_multi_days",
+            "type": "debugpy",
+            "request": "launch",
+            "envFile": "${workspaceFolder}/sg_multi_days.env",
+            "program": "${workspaceFolder}/src/sg_multi_days.py",
+            "args": []
+        },        
     ]
 }
