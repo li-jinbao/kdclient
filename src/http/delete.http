@@ -1,8 +1,8 @@
 
-@server_url=http://localhost:8822/ed/api/v1 
-@email=d1@demo.com
-@password=pytest1234
-@team_code=sgmddd
+@server_url=https://kd1.kuaihe.tech/ed/api/v1
+@email=
+@password=
+@team_code=
 
 ###
 # @name login

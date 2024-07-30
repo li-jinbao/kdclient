@@ -1,6 +1,6 @@
 @server_url=https://kd1.kuaihe.tech/ed/api/v1
-@email=pytest@demo.com
-@password=pytest1234
+@email= 
+@password= 
 @team_code=london
 
 
