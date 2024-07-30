@@ -1,8 +1,8 @@
 
-@server_url=http://host/ed/api/v1 
+@server_url=http://localhost:8883/ed/api/v1 
 
-@email=email
-@password=password
+@email=d1@demo.com
+@password=pytest1234
 @team_code=sgmd
 
 ###
@@ -51,12 +51,9 @@ Authorization: Bearer {{jwtoken}}
     "code": "w1", 
     "name": "w1",
     "team": {"code": "{{team_code}}"}, 
-    "geo_longitude": 103.839, 
-    "geo_latitude": 1.301, 
-    "flex_form_data": {
-        "area_code": "A", 
-        "skills":"Kitchen"
-    }, 
+    "geo_longitude": 103.939, 
+    "geo_latitude": 1.381, 
+    "flex_form_data": {"area_code": "A", "capacity_volume": 0, "max_nbr_order": 0,"skills":"kitchen"}, 
     "business_hour": {
         "monday": [{"open": "0005", "close": "2330", "id": "a0", "isOpen": true}], 
         "tuesday": [{"open": "0005", "close": "2330", "id": "a1", "isOpen": true}], 
@@ -79,19 +76,19 @@ Content-Type: application/json
 Authorization: Bearer {{jwtoken}}
 
 {
-    "code":"A1-0",
+    "code":"A2-0",
     "team": {"code": "{{team_code}}"} ,
     "job_type": "visit",
     "auto_planning": false,
     "is_active": true,
     "planning_status": "U",
-    "geo_longitude": 103.833, 
+    "geo_longitude": 103.733, 
     "geo_latitude": 1.309, 
     "requested_start_datetime": "2023-11-13T07:06:40",
     "requested_duration_minutes": 0.5,
     "flex_form_data": {
         "area_code": "A",
-        "skills":"Kitchen"
+        "skills":"TV"
     }
 }
 

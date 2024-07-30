@@ -1,7 +1,7 @@
-@server_url=http://_server_url_/kd/api/v1
-@email=_email_@email.com
-@password=_password_
-@team_code=_team_code_
+@server_url=http://localhost:8822/ed/api/v1
+@email=d1@demo.com
+@password=pytest1234
+@team_code=sg
 
 ###
 # @name login
@@ -25,7 +25,7 @@ Content-Type: application/json
     "code": "{{team_code}}", "name": "{{team_code}}", 
     "geo_longitude": 103.835, 
     "geo_latitude": 1.303, 
-    "planner_service": {"code": "pickdrop"}, 
+    "planner_service": {"code": "single"}, 
     "flex_form_data": {
         "enabled_rule_codes": "basic;area_code;geo_merge;max_pick2drop_merge", 
         "fixed_horizon_flag": "1", 

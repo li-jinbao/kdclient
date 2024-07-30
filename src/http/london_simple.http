@@ -1,7 +1,7 @@
-@server_url=http://_server_url_/kd/api/v1
-@email=_email_@email.com
-@password=_password_
-@team_code=_team_code_
+@server_url=https://kd1.kuaihe.tech/ed/api/v1
+@email=pytest@demo.com
+@password=pytest1234
+@team_code=london
 
 
 ###
