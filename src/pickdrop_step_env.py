@@ -27,6 +27,7 @@ class PickDropStepEnv(StepEnv):
     def load_worker_job_logs(self):
         nbr_sampled_workers = int(self.config.get("nbr_sampled_workers", 16))
         nbr_sampled_jobs = int(self.config.get("nbr_sampled_jobs", 160))
+        loc_diff = self.config.get("loc_diff", None)
 
         self.worker_log_df = (
             pd.read_csv(
@@ -38,6 +39,12 @@ class PickDropStepEnv(StepEnv):
             .sort_values(by=["start_seconds"])
             .reset_index()
         )
+        if loc_diff:
+            self.worker_log_df["start_x"] = self.worker_log_df["start_x"] + loc_diff[0]
+            self.worker_log_df["start_y"] = self.worker_log_df["start_y"] + loc_diff[1]
+            self.worker_log_df["end_x"] = self.worker_log_df["end_x"] + loc_diff[0]
+            self.worker_log_df["end_y"] = self.worker_log_df["end_y"] + loc_diff[1]
+
         self.worker_log_dict = self.worker_log_df.to_dict(orient="records")
         self.worker_log_iloc = 0
         self.all_worker_loc_list = self.worker_log_df[["start_x", "start_y"]].values
@@ -52,8 +59,13 @@ class PickDropStepEnv(StepEnv):
             .sort_values(by=["start_seconds"])
             .reset_index()
         )
-        self.job_log_dict = self.job_log_df.to_dict(orient="records")
+        if loc_diff:
+            self.job_log_df["start_x"] = self.job_log_df["start_x"] + loc_diff[0]
+            self.job_log_df["start_y"] = self.job_log_df["start_y"] + loc_diff[1]
+            self.job_log_df["end_x"] = self.job_log_df["end_x"] + loc_diff[0]
+            self.job_log_df["end_y"] = self.job_log_df["end_y"] + loc_diff[1]
 
+        self.job_log_dict = self.job_log_df.to_dict(orient="records")
         self.job_log_iloc = 0
         self.all_job_loc_list = self.job_log_df[
             [
