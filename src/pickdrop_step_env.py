@@ -182,7 +182,7 @@ class PickDropStepEnv(StepEnv):
                 "flex_form_data": {
                     "area_code": worker["area_code"],
                     "level": 1,
-                    "skills": ["skill_1"],
+                    "skills": "skill_1",
                     "assistant_to": None,
                     "is_assistant": False,
                     "tags": [],

@@ -1,0 +1,40 @@
+
+@server_url=https://kd1.kuaihe.tech/ed/api/v1
+@email=
+@password=
+@team_code=
+
+###
+# @name login
+POST {{server_url}}/auth/login
+Content-Type: application/json
+
+{"email": "{{email}}", "password": "{{password}}"}
+
+###
+@jwtoken = {{login.response.body.data.token}}
+
+###
+# @name create_team
+POST {{server_url}}/teams/
+Authorization: Bearer {{jwtoken}}
+Content-Type: application/json
+
+{
+    "code": "{{team_code}}", "name": "{{team_code}}", 
+    "geo_longitude": 103.835, 
+    "geo_latitude": 1.303, 
+    "planner_service": {"code": "single"}, 
+    "flex_form_data": {
+        "fixed_horizon_flag": "1",
+        "env_start_datetime": "2023-11-13T00:00:00",
+        "horizon_start_datetime": "2023-11-13T08:01:01",
+        "nbr_minutes_planning_windows_duration": 1440,
+
+        "enable_skills": "1"
+    }
+}
+###
+DELETE  {{server_url}}/teams/20  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
