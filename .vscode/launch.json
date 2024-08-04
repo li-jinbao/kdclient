@@ -36,11 +36,35 @@
             "args": []
         },        
         {
+            "name": "Run Shenzhen Pickdrop",
+            "type": "debugpy",
+            "request": "launch",
+            "envFile": "${workspaceFolder}/shenzhen_pickdrop.env",
+            "program": "${workspaceFolder}/src/shenzhen_pickdrop.py",
+            "args": []
+        },        
+        {
             "name": "Run sg_multi_days",
             "type": "debugpy",
             "request": "launch",
             "envFile": "${workspaceFolder}/sg_multi_days.env",
             "program": "${workspaceFolder}/src/sg_multi_days.py",
+            "args": []
+        },        
+        {
+            "name": "Run sg_multi_batch",
+            "type": "debugpy",
+            "request": "launch",
+            "envFile": "${workspaceFolder}/sg_multi_batch.env",
+            "program": "${workspaceFolder}/src/sg_multi_batch.py",
+            "args": []
+        },        
+        {
+            "name": "Run shenzhen_multi_batch",
+            "type": "debugpy",
+            "request": "launch",
+            "envFile": "${workspaceFolder}/sg_multi_batch.env",
+            "program": "${workspaceFolder}/src/shenzhen_multi_batch.py",
             "args": []
         },        
     ]
