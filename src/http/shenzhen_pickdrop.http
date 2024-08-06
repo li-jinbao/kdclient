@@ -1,0 +1,308 @@
+
+
+@server_url=https://kd1.kuaihe.tech/d/api/v1
+@email=
+@password=
+@team_code=sz1
+
+###################
+
+@lng_team=113.9418
+@lat_team=22.5583 
+
+@lng_w2=113.94
+@lat_w2=22.53
+
+# Down
+@lng_p1=113.92272949218751
+@lat_p1=22.537293224840262
+#
+@lng_d1=113.91551971435548
+@lat_d1=22.51921715492658
+ 
+
+@lng_p2=113.92822265625
+@lat_p2=22.52016858599439
+#
+@lng_d2=113.94264221191408
+@lat_d2=22.517314273139817
+
+
+# Up
+@lng_p3=113.91208648681642
+@lat_p3=22.55917161715641
+#
+@lng_d3=113.90213012695314
+@lat_d3=22.570268026064593
+ 
+
+###
+# @name login
+POST {{server_url}}/auth/login
+Content-Type: application/json
+
+{"email": "{{email}}", "password": "{{password}}"}
+
+###
+@jwtoken = {{login.response.body.data.token}}
+
+###
+# @name create_team
+POST {{server_url}}/teams/
+Authorization: Bearer {{jwtoken}}
+Content-Type: application/json
+
+{
+    "code": "{{team_code}}", "name": "{{team_code}}", 
+    "geo_longitude": {{lng_team}} ,
+    "geo_latitude": {{lat_team}},
+    "planner_service": {"code": "pickdrop"}, 
+    "flex_form_data": {
+        "enabled_rule_codes": "basic;area_code;geo_merge;max_pick2drop_merge", 
+        "fixed_horizon_flag": "1", 
+        "env_start_datetime": "2024-02-14T00:00:00", 
+        "horizon_start_datetime": "2024-02-14T02:01:01", 
+        "nbr_minutes_planning_windows_duration": 2880
+    }
+}
+
+###
+# @name create_worker
+POST {{server_url}}/workers/   HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{
+    "code": "w0", 
+    "name": "w0",
+    "team": {"code": "{{team_code}}"}, 
+    "geo_longitude": {{lng_team}} ,
+    "geo_latitude": {{lat_team}},
+    "flex_form_data": {"area_code": "A"}, 
+    "business_hour": {
+        "monday": [{"open": "0005", "close": "2330", "id": "a0", "isOpen": true}], 
+        "tuesday": [{"open": "0005", "close": "2330", "id": "a1", "isOpen": true}], 
+        "wednesday": [{"open": "0005", "close": "2330", "id": "a2", "isOpen": true}], 
+        "thursday": [{"open": "0005", "close": "2330", "id": "a3", "isOpen": true}], 
+        "friday": [{"open": "0005", "close": "2330", "id": "a4", "isOpen": true}], 
+        "saturday": [{"open": "0005", "close": "2330", "id": "a5", "isOpen": true}], 
+        "sunday": [{"open": "0005", "close": "2330", "id": "a6", "isOpen": true}]
+        }, 
+    "auto_planning": true,
+    "is_active": true
+}
+
+
+###
+# @name create_worker_w2
+POST {{server_url}}/workers/   HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{
+    "code": "w2", 
+    "name": "w2",
+    "team": {"code": "{{team_code}}"}, 
+    "geo_longitude": {{lng_w2}} ,
+    "geo_latitude": {{lat_w2}},
+    "flex_form_data": {"area_code": "A"}, 
+    "business_hour": {
+        "monday": [{"open": "0005", "close": "2330", "id": "a0", "isOpen": true}], 
+        "tuesday": [{"open": "0005", "close": "2330", "id": "a1", "isOpen": true}], 
+        "wednesday": [{"open": "0005", "close": "2330", "id": "a2", "isOpen": true}], 
+        "thursday": [{"open": "0005", "close": "2330", "id": "a3", "isOpen": true}], 
+        "friday": [{"open": "0005", "close": "2330", "id": "a4", "isOpen": true}], 
+        "saturday": [{"open": "0005", "close": "2330", "id": "a5", "isOpen": true}], 
+        "sunday": [{"open": "0005", "close": "2330", "id": "a6", "isOpen": true}]
+        }, 
+    "auto_planning": true,
+    "is_active": true
+}
+
+
+
+
+###
+# @name reset_planning_window
+
+POST {{server_url}}/planner_service/reset_planning_window/   HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{"team_code":  "{{team_code}}"}
+
+
+
+###
+POST {{server_url}}/planner_service/get_env_jobs/  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{
+    "team_code": "{{team_code}}", 
+    "active_only":false
+}
+
+
+
+###
+# 103.80397, 1.311137 --> 103.7646, 1.32349
+
+@order_code=ord1
+
+###
+# @name create_order_0
+
+POST {{server_url}}/orders/  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{
+    "code": "{{order_code}}", 
+    "flex_form_data": {"area_code": "A"},  
+    "order_type": "pickdrop", 
+    "auto_planning": true, 
+    "auto_commit": true, 
+    "team": {"code": "{{team_code}}"} ,
+    "job_list": [
+        {
+            "code": "{{order_code}}-p", 
+            "geo_longitude": {{lng_p1}}, 
+            "geo_latitude": {{lat_p1}}, 
+            "job_type": "visit", 
+            "planning_status": "U", 
+            "auto_planning": true, 
+            "flex_form_data": {"area_code": "A"}, 
+            "requested_start_datetime": "2024-02-14T02:03:00", 
+            "requested_duration_minutes": 0.5,
+            "order_code": "{{order_code}}", 
+            "team": {"code": "{{team_code}}"}  
+        }, 
+        {
+            "code": "{{order_code}}-d", 
+            "geo_longitude": {{lng_d1}}, 
+            "geo_latitude": {{lat_d1}}, 
+            "job_type": "visit", 
+            "planning_status": "U", 
+            "auto_planning": true, 
+            "flex_form_data": {"area_code": "A"}, 
+            "requested_start_datetime": "2024-02-14T03:03:00", 
+            "requested_duration_minutes": 0.5,
+            "order_code": "{{order_code}}", 
+            "team": {"code": "{{team_code}}"}  
+        }
+    ]
+}
+        
+
+###
+# 103.8601, 1.30598 --> 103.88465, 1.313883
+
+@order_code2=ord2
+
+###
+# @name create_order_2
+
+POST {{server_url}}/orders/  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{
+    "code": "{{order_code2}}", 
+    "flex_form_data": {"area_code": "A"},  
+    "order_type": "pickdrop", 
+    "auto_planning": true, 
+    "auto_commit": true, 
+    "team": {"code": "{{team_code}}"} ,
+    "job_list": [
+        {
+            "code": "{{order_code2}}-p", 
+            "geo_longitude": {{lng_p2}}, 
+            "geo_latitude": {{lat_p2}}, 
+            "job_type": "visit", 
+            "planning_status": "U", 
+            "auto_planning": true, 
+            "flex_form_data": {"area_code": "A"}, 
+            "requested_start_datetime": "2024-02-14T02:03:00", 
+            "requested_duration_minutes": 0.5,
+            "order_code": "{{order_code2}}", 
+            "team": {"code": "{{team_code}}"}  
+        }, 
+        {
+            "code": "{{order_code2}}-d", 
+            "geo_longitude": {{lng_d2}}, 
+            "geo_latitude": {{lat_d2}}, 
+            "job_type": "visit", 
+            "planning_status": "U", 
+            "auto_planning": true, 
+            "flex_form_data": {"area_code": "A"}, 
+            "requested_start_datetime": "2024-02-14T03:03:00", 
+            "requested_duration_minutes": 0.5,
+            "order_code": "{{order_code2}}", 
+            "team": {"code": "{{team_code}}"}  
+        }
+    ]
+}
+        
+
+### 
+@order_code3=ord3
+
+###
+# @name create_order_3
+
+POST {{server_url}}/orders/  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{
+    "code": "{{order_code3}}", 
+    "flex_form_data": {"area_code": "A"},  
+    "order_type": "pickdrop", 
+    "auto_planning": true, 
+    "auto_commit": true, 
+    "team": {"code": "{{team_code}}"} ,
+    "job_list": [
+        {
+            "code": "{{order_code3}}-p", 
+            "geo_longitude": {{lng_p3}}, 
+            "geo_latitude": {{lat_p3}}, 
+            "job_type": "visit", 
+            "planning_status": "U", 
+            "auto_planning": true, 
+            "flex_form_data": {"area_code": "A"}, 
+            "requested_start_datetime": "2024-02-14T02:03:00", 
+            "requested_duration_minutes": 0.5,
+            "order_code": "{{order_code3}}", 
+            "team": {"code": "{{team_code}}"}  
+        }, 
+        {
+            "code": "{{order_code3}}-d", 
+            "geo_longitude": {{lng_d3}}, 
+            "geo_latitude": {{lat_d3}}, 
+            "job_type": "visit", 
+            "planning_status": "U", 
+            "auto_planning": true, 
+            "flex_form_data": {"area_code": "A"}, 
+            "requested_start_datetime": "2024-02-14T03:03:00", 
+            "requested_duration_minutes": 0.5,
+            "order_code": "{{order_code3}}", 
+            "team": {"code": "{{team_code}}"}  
+        }
+    ]
+}
+        
+            
+            
+
+###
+POST {{server_url}}/planner_service/get_env_jobs/  HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{jwtoken}}
+
+{
+    "team_code": "{{team_code}}", 
+    "worker_codes": "w0",
+    "reset_start_datetime": false,
+    "active_only":false
+}
